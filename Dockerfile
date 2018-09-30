@@ -8,7 +8,7 @@ RUN apt-get update -y && \
 WORKDIR /home/hduser
 
 RUN wget -q http://www-eu.apache.org/dist/hadoop/common/hadoop-2.9.0/hadoop-2.9.0.tar.gz && tar zxvf hadoop-2.9.0.tar.gz && rm hadoop-2.9.0.tar.gz
-RUN wget -q http://www-eu.apache.org/dist/spark/spark-2.3.0/spark-2.3.0-bin-hadoop2.7.tgz && tar zxvf spark-2.3.0-bin-hadoop2.7.tgz && rm spark-2.3.0-bin-hadoop2.7.tgz
+RUN wget -q http://www-eu.apache.org/dist/spark/spark-2.3.1/spark-2.3.1-bin-hadoop2.7.tgz && tar zxvf spark-2.3.1-bin-hadoop2.7.tgz && rm spark-2.3.1-bin-hadoop2.7.tgz
 
 RUN ssh-keygen -t rsa -P '' -f ~/.ssh/id_rsa && \
     cat ~/.ssh/id_rsa.pub >> ~/.ssh/authorized_keys && \
@@ -21,7 +21,7 @@ RUN echo "ListenAddress 0.0.0.0" > /etc/ssh/sshd_config
 COPY ssh_config /etc/ssh/ssh_config
 
 ENV HADOOP_HOME /home/hduser/hadoop-2.9.0
-ENV SPARK_HOME /home/hduser/spark-2.3.0-bin-hadoop2.7
+ENV SPARK_HOME /home/hduser/spark-2.3.1-bin-hadoop2.7
 
 COPY mapred-site.xml  $HADOOP_HOME/etc/hadoop/
 COPY yarn-site.xml    $HADOOP_HOME/hadoop/
@@ -36,4 +36,7 @@ ENV PATH $PATH:$SPARK_HOME/bin
 WORKDIR /home/hduser/desarrollo
 
 COPY docker-entrypoint.sh $HADOOP_HOME/etc/hadoop/
+COPY hive-site.xml    $SPARK_HOME/conf/
+COPY core-site.xml    $SPARK_HOME/conf/
+COPY hdfs-site.xml    $SPARK_HOME/conf/
 ENTRYPOINT $HADOOP_HOME/etc/hadoop/docker-entrypoint.sh
